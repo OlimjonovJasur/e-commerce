@@ -1,14 +1,13 @@
 from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
-from .models import Product, Category, Customers
 from django.utils.html import format_html
-from adminsortable2.admin import SortableAdminMixin
+
+from .models import Product, Category, Customers, Attribute, AttributeValue, ProductAttribute, ProductComment
 
 
 @admin.register(Product)
-class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('title', 'category', 'price', 'discount', 'shipping_cost', 'stock', 'created_at', 'updated_at', 'image_tag')
-    search_fields = ('title', 'information')
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'price',  'discount',  'shipping_cost', 'stock', 'created_at', 'updated_at', 'image_tag')
+    search_fields = ('name', 'information')
     list_filter = ('category', 'stock', 'created_at')
     autocomplete_fields = ('category',)
 
@@ -16,9 +15,7 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         if obj.image:
             return format_html('<img src="{}" width="50" height="50" />', obj.image.url)
         return "-"
-
     image_tag.short_description = "Image"
-
 
 class ProductInline(admin.TabularInline):
     model = Product
@@ -31,10 +28,8 @@ class CategoryAdmin(admin.ModelAdmin):
     inlines = [ProductInline]
 
     def product_count(self, obj):
-        return obj.product_set.count()
+        return obj.products.count()
     product_count.short_description = 'Product Count'
-
-
 
 @admin.register(Customers)
 class CustomersAdmin(admin.ModelAdmin):
@@ -42,7 +37,13 @@ class CustomersAdmin(admin.ModelAdmin):
     search_fields = ('name', 'email')
     ordering = ('-joined',)
 
-
 admin.site.site_header = "Apelsin Admin"
 admin.site.site_title = "Apelsin Admin"
 admin.site.index_title = "Welcome to Apelsin Researcher Portal"
+
+
+admin.site.register(Attribute)
+admin.site.register(AttributeValue)
+admin.site.register(ProductAttribute)
+
+admin.site.register(ProductComment)
