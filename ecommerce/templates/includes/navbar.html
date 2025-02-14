@@ -15,6 +15,8 @@
                     <input class="form-control search-input fuzzy-search" type="search" placeholder="Search..." aria-label="Search" />
                     <span class="fas fa-search search-box-icon"></span>
 
+
+
                   </form>
                   <div class="btn-close-falcon-container position-absolute end-0 top-50 translate-middle shadow-none" data-bs-dismiss="search">
                     <div class="btn-close-falcon" aria-label="Close"></div>
@@ -118,17 +120,39 @@
                   </div>
                 </div>
 
-                <form class="d-flex justify-content-center align-items-center" method="get" action="{% url 'search' %}">
-                    <input type="text" name="q" class="form-control me-2" style="border-color: green;"/>
-                    <button class="btn btn-outline-dark" type="submit" style="background-color: green; color: white;">
-                        <i class="bi-search-fill me-1"></i>
-                        Search
-                    </button>
-                </form>
 
+                <div class="d-flex align-items-center">
+                    <form class="d-flex justify-content-center align-items-center" method="get" action="{% url 'ecommerce:search' %}">
+                        <input type="text" name="q" class="form-control me-2" style="border-color: green;"/>
+                        <button class="btn btn-outline-dark" type="submit" style="background-color: green; color: white;">
+                            <i class="bi-search-fill me-1"></i>
+                            Search
+                        </button>
+                    </form>
 
+                  {% if user.is_authenticated %}
+                    <div style="margin-left: 10px">
+                        <a href="{% url 'user:logout_page' %}">
+                          <button type="button" class="btn btn-primary"> Logout </button>
+                        </a>
+                    </div>
+                    <div style="margin-left: 20px" >
+                      <h3> {{ user.email }} </h3>
+                    </div>
+                  {% else %}
+                      <div style="margin-left: 10px">
+                        <a href="{% url 'user:login_page' %}">
+                          <button type="button" class="btn btn-primary"> Login </button>
+                        </a>
+                      </div>
 
-
+                      <div style="margin-left: 10px">
+                        <a href="#">
+                          <button type="button" class="btn btn-primary"> Register </button>
+                        </a>
+                      </div>
+                  {% endif %}
+                </div>
               </li>
             </ul>
             <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">

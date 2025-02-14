@@ -1,8 +1,10 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from phonenumber_field.modelfields import PhoneNumberField
+
+import user
 
 # Create your models here.
 
@@ -24,7 +26,7 @@ class Product(models.Model):
     favorite = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    likes = models.ManyToManyField(User, related_name='like_products')
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_products')
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products')
 
 

@@ -56,10 +56,10 @@
                       </div>
                     </div>
                       <div class="col-auto px-2 px-md-3"><a class="btn btn-sm btn-primary" href="#!"><span class="fas fa-cart-plus me-sm-2"></span><span class="d-none d-sm-inline-block">Add To Cart</span></a></div>
-                      <div class="col-auto px-0"><a class="btn btn-sm btn-outline-danger border-300" href="{% url 'product-like' product.pk %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to Wish List"><span class="far fa-heart me-1"></span>{{ product.likes.count }}</a></div>
+                      <div class="col-auto px-0"><a class="btn btn-sm btn-outline-danger border-300" href="{% url 'ecommerce:product-like' product.pk %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to Wish List"><span class="far fa-heart me-1"></span>{{ product.likes.count }}</a></div>
 
                       <div>
-                        <form method="POST" action="{% url 'product_delete' product.id %}">
+                        <form method="POST" action="{% url 'ecommerce:product_delete' product.id %}">
                           <button type="submit" class="btn btn-danger">Delete</button>
                           {% csrf_token %}
                         </form>
@@ -67,7 +67,7 @@
 
 
                           <button type="submit" class="btn btn-outline-primary">
-                            <a href="{% url 'product_edit' product.id %}">Edit</a>
+                            <a href="{% url 'ecommerce:product_edit' product.id %}">Edit</a>
                           </button>
 
                     </div>
@@ -150,7 +150,7 @@
                             {% endfor %}
                           </div>
                           <div class="col-lg-6 ps-lg-5">
-                            <form method="POST" action="{% url 'product-comment' product.pk %}">
+                            <form method="POST" action="{% url 'ecommerce:product-comment' product.pk %}">
                               {% csrf_token %}
                               <h5 class="mb-3">Write your Review</h5>
                               <div class="mb-3">

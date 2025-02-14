@@ -59,7 +59,7 @@ def send_product_comment(request, pk):
             comment.product = product
             comment.rating = Decimal(request.POST.get('rating', 0))
             comment.save()
-            return redirect('product-detail', pk=product.pk)
+            return redirect('ecommerce:product-detail', pk=product.pk)
 
     else:
         comment_form = ProductCommentForm()
@@ -104,7 +104,7 @@ def product_edit(request, pk):
         form = ProductModelForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
-            return redirect('product-detail', pk)
+            return redirect('ecommerce:product-detail', pk)
     context = {
         'form': form,
         'product': product,
