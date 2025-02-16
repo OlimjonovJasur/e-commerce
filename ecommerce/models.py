@@ -27,8 +27,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_products')
-    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products')
-
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products', null=True, blank=True)
 
     @property
     def get_absolute_url(self):

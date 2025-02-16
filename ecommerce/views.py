@@ -3,8 +3,10 @@ from lib2to3.fixes.fix_input import context
 from re import search
 
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.context_processors import request
 
 from ecommerce.forms import ProductCommentForm, ProductModelForm
 from ecommerce.models import Product, ProductAttribute, Customers
@@ -16,10 +18,19 @@ from ecommerce.models import Product, ProductAttribute, Customers
 def index(request):
     products = Product.objects.all()
     product_attributes = ProductAttribute.objects.all()
+
+    paginator = Paginator(products, 4)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     context = {
-        'products': products
+        'page_obj': page_obj
     }
     return render(request, 'ecommerce/product-list.html', context=context)
+
+    # paginator = Paginator(products, 4)
+    # page_number = request.GET.get("page")
+    # page_obj = paginator,get_page(page_number)
+
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
