@@ -89,7 +89,7 @@ def product_create(request):
         form = ProductModelForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect('ecommerce:index')
     else:
         form = ProductModelForm()
     context = {

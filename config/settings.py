@@ -12,9 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from django.urls import reverse_lazy
 
 load_dotenv()
-from django.conf.global_settings import AUTH_USER_MODEL, SECRET_KEY, DEFAULT_FROM_EMAIL
+from django.conf.global_settings import AUTH_USER_MODEL, SECRET_KEY, DEFAULT_FROM_EMAIL, LOGIN_REDIRECT_URL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,7 +37,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,7 +48,9 @@ INSTALLED_APPS = (
     'ecommerce.apps.EcommerceConfig',
     'phonenumber_field',
     'user.apps.UserConfig',
-)
+    'social_django',
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -127,6 +130,12 @@ USE_I18N = True
 USE_TZ = True
 
 
+DEBUG = True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -148,16 +157,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.User'
 
 
-
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "leo26292004@gmail.com"
-EMAIL_HOST_PASSWORD = "cfmw fexq mxtp uyza"
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_USE_TLS')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 
 # py manage.py shell
@@ -165,6 +171,25 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # from django.core.mail import send_mail
 #
 # send_mail('salom', 'assalomu aleykum shoxruh krisa', 'leo26292004@gmail.com', ['bemerituss@gmail.com'])
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
+    # 'social_core.backends.facebook.FacebookOAuth2',
+    # 'social_core.backends.twitter.TwitterOAuth',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+LOGIN_REDIRECT_URL = reverse_lazy('ecommerce:index')
+# LOGIN_REDIRECT_URL = '/ecommerce:index/'
+
+
+# SOCIAL_AUTH_FACEBOOK_KEY = '2241188469628857'
+# SOCIAL_AUTH_FACEBOOK_SECRET = '86bec2773fdc554731b7d582d45e5ffb'
+
+
 
 
 

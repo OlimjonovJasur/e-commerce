@@ -132,9 +132,10 @@
 
                   {% if user.is_authenticated %}
                     <div style="margin-left: 10px">
-                        <a href="{% url 'user:logout_page' %}">
-                          <button type="button" class="btn btn-primary"> Logout </button>
-                        </a>
+                        <form action="{% url 'user:logout_page' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Logout</button>
+                        </form>
                     </div>
                     <div style="margin-left: 20px" >
                       <h3> {{ user.email }} </h3>
