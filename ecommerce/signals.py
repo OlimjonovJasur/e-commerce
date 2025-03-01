@@ -1,5 +1,8 @@
+from django.core.mail import EmailMessage
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+
+from user.models import User
 from .models import Product, ProductComment, Customers
 from decimal import Decimal
 
@@ -11,7 +14,18 @@ def calculate_product_rating(product):
     return 5.0
 
 @receiver(post_save, sender=Product)
-def product_saved(sender, instance, **kwargs):
+def product_saved(sender, instance, created, **kwargs):
+    # if created:
+    #     users = User.objects.all()
+    #     email_of_users = [user.email for user in users]
+    #     email = EmailMessage(
+    #         f'Product saved',
+    #         f'{instance.name.title()} successfully saved',
+    #         to=email_of_users
+    #     )
+    #     email.send()
+    #     print('Email send')
+
     print(f'Product "{instance.name}" has been saved.')
 
 @receiver(post_save, sender=ProductComment)

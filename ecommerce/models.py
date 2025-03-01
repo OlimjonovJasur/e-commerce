@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from phonenumber_field.modelfields import PhoneNumberField
+from django.template.defaultfilters import slugify
 
 import user
 
@@ -28,6 +29,12 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_products')
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products', null=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Product, self).save(*args, **kwargs)
 
     @property
     def get_absolute_url(self):
@@ -53,6 +60,12 @@ class Product(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+            super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name

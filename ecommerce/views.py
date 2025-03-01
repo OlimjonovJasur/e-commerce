@@ -34,8 +34,8 @@ def index(request):
     # page_obj = paginator,get_page(page_number)
 
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug)
     context = {
         'product': product
     }
@@ -61,8 +61,8 @@ def product_like_view(request, pk):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def send_product_comment(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+def send_product_comment(request, slug):
+    product = get_object_or_404(Product, slug=slug)
 
     if request.method == 'POST':
         comment_form = ProductCommentForm(data=request.POST)
@@ -101,23 +101,23 @@ def product_create(request):
     return render(request, 'ecommerce/create.html', context=context)
 
 
-def product_delete(request, pk):
+def product_delete(request, slug):
     try:
-        product = Product.objects.get(id=pk)
+        product = Product.objects.get(slug=slug)
         product.delete()
         return redirect('index')
-    except Product.DoesMotExists as e:
+    except Product.DoesNotExist as e:
         print(e)
 
 
-def product_edit(request, pk):
-    product = Product.objects.get(id=pk)
+def product_edit(request, slug):
+    product = Product.objects.get(slug=slug)
     form = ProductModelForm(instance=product)
     if request.method == 'POST':
         form = ProductModelForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
-            return redirect('ecommerce:product-detail', pk)
+            return redirect('ecommerce:product-detail', slug=product.slug)
     context = {
         'form': form,
         'product': product,

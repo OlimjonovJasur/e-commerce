@@ -10,6 +10,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'information')
     list_filter = ('category', 'stock', 'created_at')
     autocomplete_fields = ('category',)
+    prepopulated_fields = {'slug': ('name',)}
 
     def image_tag(self, obj):
         if obj.image:
@@ -25,6 +26,7 @@ class ProductInline(admin.TabularInline):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'product_count')
     search_fields = ('name',)
+    prepopulated_fields = {'slug':('name',)}
     inlines = [ProductInline]
 
     def product_count(self, obj):
