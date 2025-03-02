@@ -16,4 +16,5 @@ urlpatterns = [
     path('product/like/<slug:slug>/', views.product_like_view, name='product-like'),
     path('product/comment/send/<slug:slug>/', views.send_product_comment, name='product-comment'),
     path('search/', views.search_view, name='search'),
+    path('export-data/', views.export_data, name='export_data')
 ]

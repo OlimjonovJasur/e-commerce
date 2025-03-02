@@ -1,10 +1,10 @@
+import csv
+import json
+import openpyxl
 from decimal import Decimal
-from lib2to3.fixes.fix_input import context
-from re import search
-
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.context_processors import request
 
@@ -142,4 +142,57 @@ def customer_list(request):
         'customers': customers
     }
     return render(request, 'ecommerce/customers.html', context=context)
+
+
+def export_data(request):
+    format = request.GET.get('format', '')
+    response = None
+    if format == 'csv':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=customer_list.csv'
+        writer = csv.writer(response)
+        writer.writerow(['Id', 'Full Name', 'Email', 'Phone Number', 'Address', 'Joined'])
+
+        for customer in Customers.objects.all():
+            writer.writerow([customer.id, customer.name, customer.email, str(customer.phone), customer.billing_address, customer.joined.strftime("%Y-%m-%d")])
+
+    elif format == 'json':
+        response = HttpResponse(content_type='application/json')
+        customers = Customers.objects.all()
+        data = []
+        for customer in customers:
+            data.append({
+                "name": customer.name,
+                "email": customer.email,
+                "phone": str(customer.phone),
+                "billing_address": customer.billing_address,
+                "joined": customer.joined.strftime("%Y-%m-%d")
+            })
+
+        response.write(json.dumps(data, indent=3))
+        response['Content-Disposition'] = 'attachment; filename=customers.json'
+
+    elif format == 'xlsx':
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=customers.xlsx'
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Customers"
+
+        headers = ['Id', 'Full Name', 'Email', 'Phone Number', 'Address', 'Joined']
+        ws.append(headers)
+
+        for customer in Customers.objects.all():
+            ws.append([customer.id, customer.name, customer.email, str(customer.phone), customer.billing_address, customer.joined.strftime("%Y-%m-%d")])
+
+        wb.save(response)
+
+    else:
+        response = HttpResponse(status=400)
+        response.content = 'Bad request'
+
+    return response
+
+
 
